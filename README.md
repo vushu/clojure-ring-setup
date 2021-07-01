@@ -8,7 +8,10 @@ Download from https://github.com/vushu/myapp
 
 ## Usage
 
-FIXME: explanation
+
+Run DEV MODE:
+
+    $ clojure -A:run-dev
 
 Run the project directly, via `:exec-fn`:
 
