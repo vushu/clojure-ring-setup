@@ -1,0 +1,5 @@
+#! /usr/bin/bash
+clj -M -m nrepl.cmdline \
+    --middleware "[cider.nrepl/cider-middleware]" \
+    --interactive
+

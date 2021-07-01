@@ -1,0 +1,40 @@
+{:paths ["src" "resources"]
+ :deps {org.clojure/clojure {:mvn/version "1.10.3"}
+        ring/ring {:mvn/version "1.9.3"}
+        metosin/reitit {:mvn/version "0.5.13"}
+        nrepl/nrepl {:mvn/version "0.8.3"}
+        cider/nrepl {:mvn/version "0.3.0"}
+        cider/cider-nrepl {:mvn/version "0.26.0"}
+        com.bhauman/rebel-readline {:mvn/version "0.1.4"}
+        }
+ :aliases
+ {:run-m {:main-opts ["-m" "vushu.myapp"]}
+
+  :run-x {:ns-default vushu.myapp
+          :exec-fn greet
+          :exec-args {:name "Clojure"}}
+
+  ;:rebel {:main-opts ["-m" "nrepl.cmdline" "--middleware" "[cider.nrepl/cider-middleware]" "rebel-readline.main"]}
+
+  :test {:extra-paths ["test"]
+         :extra-deps {org.clojure/test.check {:mvn/version "1.1.0"}}}
+  :runner
+  {:extra-deps {io.github.cognitect-labs/test-runner
+                {:git/url "https://github.com/cognitect-labs/test-runner"
+                 :sha "2d69f33d7980c3353b246c28f72ffeafbd9f2fab"}}
+   :exec-fn cognitect.test-runner.api/test}
+  :uberjar {:replace-deps {com.github.seancorfield/depstar {:mvn/version "2.0.216"}}
+            :exec-fn hf.depstar/uberjar
+            :exec-args {:aot true
+                        :jar "myapp.jar"
+                        :main-class "vushu.myapp"
+                        :sync-pom true}}
+  :cider-clj {:extra-deps {cider/cider-nrepl {:mvn/version "0.22.4"}}
+              :main-opts ["-m" "nrepl.cmdline" "--middleware" "[cider.nrepl/cider-middleware]"]}
+
+  :cider-cljs {:extra-deps {org.clojure/clojurescript {:mvn/version "1.10.339"}
+                            cider/cider-nrepl {:mvn/version "0.22.4"}
+                            cider/piggieback {:mvn/version "0.5.1"}}
+               :main-opts ["-m" "nrepl.cmdline" "--middleware"
+                           "[cider.nrepl/cider-middleware,cider.piggieback/wrap-cljs-repl]"]}
+  }}
