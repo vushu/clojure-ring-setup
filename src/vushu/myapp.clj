@@ -1,11 +1,7 @@
 (ns vushu.myapp
   (:require [ring.adapter.jetty :as jetty]
             [ring.middleware.reload :refer [wrap-reload]]
-            [rebel-readline.main :as rebel]
-            [cider.nrepl :refer [cider-nrepl-handler]]
-            [nrepl.server :as server]
-            [nrepl.cmdline :refer [save-port-file]]
-            )
+            [vushu.repl :refer [run-repl]])
   (:gen-class))
 
 (defn test []
@@ -28,11 +24,6 @@
             <p>Welcome to first Clojure app.
             This message is returned regardless of the request, sorry<p>"})
 
-
-(defn run-repl []
-  (println "running repl on port 7888")
-  (save-port-file (server/start-server :handler cider-nrepl-handler) {})
-  (rebel/-main))
 
 (defn -main "dev mode"
   [& args]

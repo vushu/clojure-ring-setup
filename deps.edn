@@ -8,7 +8,9 @@
         com.bhauman/rebel-readline {:mvn/version "0.1.4"}
         }
  :aliases
- {:run-m {:main-opts ["-m" "vushu.myapp"]}
+ {
+  :run-m {:main-opts ["-m" "vushu.myapp"]}
+  :run-dev {:main-opts ["-m" "vushu.repl"]}
 
   :run-x {:ns-default vushu.myapp
           :exec-fn greet
