@@ -1,22 +1,23 @@
-{:paths ["src" "resources"]
+{:paths ["src" "resources" "src/vushu/views"]
  :deps {org.clojure/clojure {:mvn/version "1.10.3"}
         ring/ring {:mvn/version "1.9.3"}
         metosin/reitit {:mvn/version "0.5.13"}
+        metosin/muuntaja {:mvn/version "0.6.8"}
         nrepl/nrepl {:mvn/version "0.8.3"}
         cider/nrepl {:mvn/version "0.3.0"}
         cider/cider-nrepl {:mvn/version "0.26.0"}
         com.bhauman/rebel-readline {:mvn/version "0.1.4"}
+        hiccup/hiccup {:mvn/version "1.0.5"}
+        buddy/buddy-auth {:mvn/version "3.0.1"}
         }
  :aliases
  {
   :run-m {:main-opts ["-m" "vushu.myapp"]}
-  :run-dev {:main-opts ["-m" "vushu.repl"]}
+  :repl {:main-opts ["-m" "vushu.repl"]}
 
   :run-x {:ns-default vushu.myapp
           :exec-fn greet
           :exec-args {:name "Clojure"}}
-
-  ;:rebel {:main-opts ["-m" "nrepl.cmdline" "--middleware" "[cider.nrepl/cider-middleware]" "rebel-readline.main"]}
 
   :test {:extra-paths ["test"]
          :extra-deps {org.clojure/test.check {:mvn/version "1.1.0"}}}
