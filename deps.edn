@@ -9,6 +9,7 @@
         com.bhauman/rebel-readline {:mvn/version "0.1.4"}
         hiccup/hiccup {:mvn/version "1.0.5"}
         buddy/buddy-auth {:mvn/version "3.0.1"}
+        cljc.java-time/cljc.java-time {:mvn/version "0.1.16"}
         }
  :aliases
  {

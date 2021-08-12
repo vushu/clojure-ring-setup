@@ -6,13 +6,14 @@
             [vushu.repl :refer [run-repl]]
             [reitit.ring.coercion :as coersion]
             [reitit.ring :as ring]
-            [vushu.routes :refer [router]]
+            [vushu.routes :as routes]
             [muuntaja.middleware :as middleware]
             [muuntaja.core :as m]
             [buddy.auth.accessrules :refer [wrap-access-rules]]
             [buddy.auth :refer [authenticated?]]
             [buddy.auth.middleware :refer [wrap-authentication
                                            wrap-authorization]]
+            [buddy.core.keys]
 
             [ring.util.response :refer [response redirect]]
             [buddy.auth.backends.session :refer [session-backend]]
@@ -28,7 +29,7 @@
 (def rules [{:pattern #"^/login$"
              :handler any-access}
             {:pattern #"^/.*"
-             :handler (fn [req] (do (println "HANDLING SESSIon" (:session req)) (authenticated? req)))
+             :handler (fn [req] (do (println "HANDLING SESSIon" (:identity req)) (authenticated? req)))
              :on-error (fn [req _]
                          (when-not ( authenticated? req)
                            (redirect "login")))}])
@@ -55,7 +56,7 @@
                                 :authfn my-authfn
                                 :unauthorized-handler my-unauthorized-handler})))
 
-(def backend (session-backend))
+;(def backend (session-backend))
 
 (defn my-authfn
   [request authdata]
@@ -70,8 +71,12 @@
    :body "You are not authorized!"})
 
 (def app
-  (-> (ring/ring-handler router ring/default-options-handler {:middleware [wrap-session]})
-      ;(wrap-access-rules {:rules rules :on-error on-error})
+  ;(-> (ring/ring-handler router ring/default-options-handler {:middleware [wrap-session]})
+  (-> (ring/ring-handler routes/router ring/default-options-handler )
+      ;wrap-params
+      ;(wrap-authorization routes/backend)
+      ;(wrap-authentication routes/backend)
+      ;(wrap-access-rules {:rules rules :on-error on-error} )
       ))
 
 (def app-with-reload
