@@ -2,6 +2,7 @@
   (:require [ring.adapter.jetty :as jetty]
             [ring.middleware.reload :refer [wrap-reload]]
             [ring.middleware.session :refer [wrap-session]]
+            [ring.middleware.cookies :refer [wrap-cookies]]
             [ring.middleware.params :refer [wrap-params]]
             [vushu.repl :refer [run-repl]]
             [reitit.ring.coercion :as coersion]
@@ -70,9 +71,10 @@
    :headers {}
    :body "You are not authorized!"})
 
+
 (def app
-  ;(-> (ring/ring-handler router ring/default-options-handler {:middleware [wrap-session]})
-  (-> (ring/ring-handler routes/router ring/default-options-handler )
+  (-> (ring/ring-handler routes/router ring/default-options-handler {:middleware [wrap-session]})
+  ;(-> (ring/ring-handler routes/router ring/default-options-handler )
       ;wrap-params
       ;(wrap-authorization routes/backend)
       ;(wrap-authentication routes/backend)

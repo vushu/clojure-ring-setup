@@ -5,11 +5,14 @@
              [vushu.views.users :as users]
              [vushu.views.pages :as pages]
              [vushu.views.login :as login]
+             [vushu.views.dashboard :as dashboard]
              [ring.middleware.params :as params]
              [ring.middleware.session :refer [wrap-session]]
+             [ring.middleware.cookies :refer [wrap-cookies]]
+             [ring.middleware.stacktrace :refer [wrap-stacktrace]]
              [muuntaja.core :as m]
              [reitit.ring.middleware.muuntaja :as muuntaja]
-             [ring.util.response :refer [response redirect]]
+             [ring.util.response :refer [response redirect update-header header]]
              [buddy.auth :refer [authenticated? throw-unauthorized]]
              [reitit.ring.coercion :as rcc]
              [reitit.coercion.spec]
@@ -35,11 +38,9 @@
 (type #inst "2020-05-11")
 (prn-str #inst "2020-05-11")
 
-(def exp (util/to-timestamp (ins/plus-seconds (ins/now) 3600)))
+;;Must be a function or it wont renew
+(defn exp [] (util/to-timestamp (ins/plus-seconds (ins/now) 3600)))
 
-;(lt/now)
-(def timer (lt/plus-seconds (lt/now) 3600))
-(lt/now)
 
 (defn authenticate-user [req]
   (if-not  (authenticated? req)
@@ -62,16 +63,29 @@
   (backends/jwe {:secret privkey
                  :options {:alg :rsa-oaep
                            :enc :a128cbc-hs256}}))
+(defn store-token-in-session [session token]
+  (assoc (redirect "/")
+         :session (assoc session :token token)))
+
+(comment
+  (defn update-header [req token]
+    (let [headers (:headers req)
+          updated (conj headers  {"Authorization: Token" token})]
+
+      (println "updated stuffs" updated)
+      (assoc req :headers updated))))
 
 (defn login-handler [req]
   (let [claims {:user "DAN"
-                :exp  exp}
-        token (jwt/encrypt claims pubkey {:alg :rsa-oaep :enc :a128cbc-hs256})]
+                :exp  (exp)}
+        cookies (:cookies req)
+        token (jwt/encrypt claims pubkey {:alg :rsa-oaep :enc :a128cbc-hs256})
+        up-request (assoc req :cookies token)]
 
-    ;{:status 200
-    ;:body (m/encode "application/transit+json" token)
-    ;}
-    ( response {:token token})
+
+    ;(println "TOOOOOKKKEN" up-request)
+    (assoc (redirect "/") :cookies (assoc cookies :Token token))
+
     ))
 
 (def paths
@@ -79,6 +93,7 @@
   [["/"
 
     ["" (partial main-layout (fn [req] [:h1 "Are you authenticated? " (authenticated? req) (:identity req)])) ]
+    ["dashboard" (partial main-layout dashboard/index)]
 
     ["login" {:get login/index
               :post login-handler
@@ -107,13 +122,27 @@
 
 (defn any-access [_] true)
 
-(def rules [{:pattern #"^/login$"
+(def rules [
+            {:pattern #"^/login$"
              :handler any-access}
+
+            ;{:pattern #"^/dashboard"
+            ;:handler (fn [req] (do (prn (:cookies req)) (some? (:cookies req))))}
+
             {:pattern #"^/.*"
-             :handler (fn [req] (do (println "You may pass?" (:identity req) ) (authenticated? req)))
+             :handler (fn [req]  (authenticated? req))
              :on-error (fn [req _]
-                         (when-not ( authenticated? req)
-                           (redirect "login")))}])
+                         (dissoc :cookies)
+                         (redirect "login"))}])
+
+(defn get-token [request]
+  (:value (get (:cookies request) "Token"))
+  )
+
+(defn cookie-token-to-header [handler] (fn [request]
+                                         (println "==========================\r\n" (get-token request))
+                                         (let [req (header request "Authorization" (str "Token " (get-token request) ))]
+                                           (handler req))))
 
 
 (def options
@@ -121,6 +150,9 @@
           :muuntaja m/instance
           :middleware [
 
+                       [wrap-stacktrace]
+                       ;[wrap-cookies]
+                       [cookie-token-to-header]
                        [wrap-authorization backend]
                        [wrap-authentication backend]
 
