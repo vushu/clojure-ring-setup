@@ -14,7 +14,8 @@
             [buddy.auth :refer [authenticated?]]
             [buddy.auth.middleware :refer [wrap-authentication
                                            wrap-authorization]]
-            [buddy.core.keys]
+            ;[buddy.core.keys]
+            ;[buddy.hashers :as hasher]
 
             [ring.util.response :refer [response redirect]]
             [buddy.auth.backends.session :refer [session-backend]]
@@ -58,6 +59,7 @@
                                 :unauthorized-handler my-unauthorized-handler})))
 
 ;(def backend (session-backend))
+;
 
 (defn my-authfn
   [request authdata]
@@ -88,7 +90,8 @@
   jetty/run-jetty)
 
 
-(defn -main "dev mode"
+(defn -main "running program"
   [& args]
   ;(run-repl)
-  (jetty/run-jetty #'app-with-reload {:port 8080 :join? false}))
+  (jetty/run-jetty app {:port 8888}))
+  ;(jetty/run-jetty #'app-with-reload {:port 8080 :join? false}))

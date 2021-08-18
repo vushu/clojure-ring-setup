@@ -9,7 +9,11 @@
         com.bhauman/rebel-readline {:mvn/version "0.1.4"}
         hiccup/hiccup {:mvn/version "1.0.5"}
         buddy/buddy-auth {:mvn/version "3.0.1"}
+        buddy/buddy-hashers {:mvn/version "1.8.1"}
         cljc.java-time/cljc.java-time {:mvn/version "0.1.16"}
+        com.github.seancorfield/next.jdbc {:mvn/version "1.2.689"}
+        com.github.seancorfield/honeysql {:mvn/version "2.0.0-rc5"}
+        org.postgresql/postgresql {:mvn/version "42.2.10"}
         }
  :aliases
  {

@@ -28,6 +28,7 @@
              [buddy.core.nonce :as nonce]
              [buddy.auth.middleware :refer [wrap-authentication
                                             wrap-authorization]]
+             [buddy.hashers :as hasher]
              ))
 (def request
   {:headers
@@ -37,6 +38,8 @@
 
 (type #inst "2020-05-11")
 (prn-str #inst "2020-05-11")
+
+(defn hash-password [password] (hasher/derive password {:alg :argon2id}))
 
 ;;Must be a function or it wont renew
 (defn exp [] (util/to-timestamp (ins/plus-seconds (ins/now) 3600)))
@@ -75,17 +78,23 @@
       (println "updated stuffs" updated)
       (assoc req :headers updated))))
 
+(defn password-matches-hashed [password hashed-password] (:valid (hasher/verify password hashed-password)))
+
 (defn login-handler [req]
-  (let [claims {:user "DAN"
+  (let [
+        claims {:user "DAN"
                 :exp  (exp)}
         cookies (:cookies req)
+        password (-> req :parameters :form :password)
         token (jwt/encrypt claims pubkey {:alg :rsa-oaep :enc :a128cbc-hs256})
         up-request (assoc req :cookies token)]
 
 
-    ;(println "TOOOOOKKKEN" up-request)
-    (assoc (redirect "/") :cookies (assoc cookies :Token token))
+    (println "THE PASSWORD" password)
 
+    (if (password-matches-hashed password (hash-password "mama"))
+      (assoc-in (redirect "/") [:cookies :token] token)
+      (redirect "/login"))
     ))
 
 (def paths
@@ -96,7 +105,12 @@
     ["dashboard" (partial main-layout dashboard/index)]
 
     ["login" {:get login/index
-              :post login-handler
+              :post {
+                     :coercion reitit.coercion.spec/coercion
+                     :parameters {:form {:username string? :password string?}}
+                     :handler login-handler
+                     }
+
               }]
     ["users"
      ["" (partial main-layout users/index)]
@@ -136,11 +150,10 @@
                          (redirect "login"))}])
 
 (defn get-token [request]
-  (:value (get (:cookies request) "Token"))
-  )
+  (:value (get (:cookies request) "token")))
 
 (defn cookie-token-to-header [handler] (fn [request]
-                                         (println "==========================\r\n" (get-token request))
+                                         ;(println "==========================\r\n" (get-token request))
                                          (let [req (header request "Authorization" (str "Token " (get-token request) ))]
                                            (handler req))))
 
@@ -151,7 +164,7 @@
           :middleware [
 
                        [wrap-stacktrace]
-                       ;[wrap-cookies]
+                       [wrap-cookies {:http-only true :same-site :lax}]
                        [cookie-token-to-header]
                        [wrap-authorization backend]
                        [wrap-authentication backend]
