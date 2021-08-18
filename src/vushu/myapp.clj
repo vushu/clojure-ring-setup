@@ -93,5 +93,5 @@
 (defn -main "running program"
   [& args]
   ;(run-repl)
-  (jetty/run-jetty app {:port (Integer/valueOf (or (System/getenv "port") "3000"))}))
+  (jetty/run-jetty app {:port (Integer/valueOf (or (System/getenv "PORT") "3000"))}))
   ;(jetty/run-jetty #'app-with-reload {:port 8080 :join? false}))
