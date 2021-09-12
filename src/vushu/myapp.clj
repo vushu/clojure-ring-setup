@@ -100,7 +100,7 @@
 
 (defn -main "running program"
   [& [port]]
-
+  (database/create-all-table)
   (let [port (Integer. (or port
                            (System/getenv "PORT")
                            8888))]

@@ -8,7 +8,9 @@
             [buddy.sign.util :as util]
             [next.jdbc :as jdbc]
             [vushu.auth :refer [hash-password password-matches-hashed password-maches-users]]
-            [next.jdbc.date-time :as sql-date]))
+            [next.jdbc.date-time :as sql-date]
+            [heroku-database-url-to-jdbc.core :as h]
+            ))
 
 (def local-config
   {:dbtype "postgresql"
@@ -20,10 +22,19 @@
 
 ;:host "localhost"
 
+(def database-url "jdbc:postgres://noawzrhubcobye:b9302cee8247f1a8e9ab0afc36bbbb388ceb97ab0bfd86c092114c4727d3659f@ec2-34-255-134-200.eu-west-1.compute.amazonaws.com:5432/dfk0b0u29ckfp0")
+
+(def url "postgres://noawzrhubcobye:b9302cee8247f1a8e9ab0afc36bbbb388ceb97ab0bfd86c092114c4727d3659f@ec2-34-255-134-200.eu-west-1.compute.amazonaws.com:5432/dfk0b0u29ckfp0")
+
+(def heroku-url (h/jdbc-connection-string url))
+
 (def prod-config
   {:dbtype "postgresql"
-   :jdbcUrl (System/getenv "DATABASE_URL")})
+   :jdbcUrl (h/jdbc-connection-string) (System/getenv "DATABASE_URL")})
 
+
+(def test-config
+  {:jdbcUrl heroku-url})
 
 (def get-config
   (if (System/getenv "DATABASE_URL")
@@ -31,7 +42,7 @@
     local-config
     ))
 
-(def db (jdbc/get-datasource prod-config))
+(def db (jdbc/get-datasource test-config))
 
 (def create-user-table
   (-> (create-table :users :if-not-exists)
@@ -95,10 +106,10 @@
       (execute)))
 
 ;(let [user (find-user-by-email "danvu.hustle@gmail.com")]
-  ;(password-matches-hashed "123123" (:users/password user)))
+;(password-matches-hashed "123123" (:users/password user)))
 
 ;(-> (add-user "danvu.hustle@gmail.com", "123123")
-;(execute))
+    ;(execute))
 
 
 

@@ -14,6 +14,7 @@
         com.github.seancorfield/next.jdbc {:mvn/version "1.2.689"}
         com.github.seancorfield/honeysql {:mvn/version "2.0.783"}
         org.postgresql/postgresql {:mvn/version "42.2.22"}
+        heroku-database-url-to-jdbc/heroku-database-url-to-jdbc {:mvn/version "0.2.2"}
         }
  :aliases
  {
