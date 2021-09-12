@@ -87,14 +87,14 @@
 (def app-with-reload
   (wrap-reload #'app))
 
-(defonce server
-  (jetty/run-jetty #'app-with-reload {:port (Integer/valueOf (or (System/getenv "PORT") "3000")) :join? false}))
+;(defonce server
+  ;(jetty/run-jetty #'app-with-reload {:port (Integer/valueOf (or (System/getenv "PORT") "3000")) :join? false}))
 
-(defn stop-server []
-  (.stop server))
+;(defn stop-server []
+  ;(.stop server))
 
-(defn start-server []
-  (.start server))
+;(defn start-server []
+  ;(.start server))
 
 (defn -main "running program"
   [& args]
