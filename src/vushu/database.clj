@@ -32,8 +32,8 @@
   { :jdbcUrl (h/jdbc-connection-string (System/getenv "DATABASE_URL"))})
 
 
-(def test-config
-  {:jdbcUrl heroku-url})
+;(def test-config
+  ;{:jdbcUrl heroku-url})
 
 (def get-config
   (if (System/getenv "DATABASE_URL")
