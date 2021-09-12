@@ -31,7 +31,7 @@
     local-config
     ))
 
-(def db (jdbc/get-datasource local-config))
+(def db (jdbc/get-datasource get-config))
 
 (def create-user-table
   (-> (create-table :users :if-not-exists)
