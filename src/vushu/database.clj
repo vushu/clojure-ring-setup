@@ -29,8 +29,7 @@
 (def heroku-url (h/jdbc-connection-string url))
 
 (def prod-config
-  {:dbtype "postgresql"
-   :jdbcUrl (h/jdbc-connection-string) (System/getenv "DATABASE_URL")})
+  { :jdbcUrl (h/jdbc-connection-string) (System/getenv "DATABASE_URL")})
 
 
 (def test-config
