@@ -22,14 +22,14 @@
 
 ;:host "localhost"
 
-(def database-url "jdbc:postgres://noawzrhubcobye:b9302cee8247f1a8e9ab0afc36bbbb388ceb97ab0bfd86c092114c4727d3659f@ec2-34-255-134-200.eu-west-1.compute.amazonaws.com:5432/dfk0b0u29ckfp0")
+;(def database-url "jdbc:postgres://noawzrhubcobye:b9302cee8247f1a8e9ab0afc36bbbb388ceb97ab0bfd86c092114c4727d3659f@ec2-34-255-134-200.eu-west-1.compute.amazonaws.com:5432/dfk0b0u29ckfp0")
 
-(def url "postgres://noawzrhubcobye:b9302cee8247f1a8e9ab0afc36bbbb388ceb97ab0bfd86c092114c4727d3659f@ec2-34-255-134-200.eu-west-1.compute.amazonaws.com:5432/dfk0b0u29ckfp0")
+;(def url "postgres://noawzrhubcobye:b9302cee8247f1a8e9ab0afc36bbbb388ceb97ab0bfd86c092114c4727d3659f@ec2-34-255-134-200.eu-west-1.compute.amazonaws.com:5432/dfk0b0u29ckfp0")
 
-(def heroku-url (h/jdbc-connection-string url))
+;(def heroku-url (h/jdbc-connection-string url))
 
 (def prod-config
-  { :jdbcUrl (h/jdbc-connection-string) (System/getenv "DATABASE_URL")})
+  { :jdbcUrl (h/jdbc-connection-string (System/getenv "DATABASE_URL"))})
 
 
 (def test-config
@@ -41,7 +41,7 @@
     local-config
     ))
 
-(def db (jdbc/get-datasource test-config))
+(def db (jdbc/get-datasource get-config))
 
 (def create-user-table
   (-> (create-table :users :if-not-exists)
