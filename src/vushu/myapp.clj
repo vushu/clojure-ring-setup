@@ -87,19 +87,25 @@
 (def app-with-reload
   (wrap-reload #'app))
 
-;(defonce server
-  ;(jetty/run-jetty #'app-with-reload {:port (Integer/valueOf (or (System/getenv "PORT") "3000")) :join? false}))
+(defn app-server-start
+  [port]
+  (jetty/run-jetty app-with-reload {:port port :join? false}))
 
-;(defn stop-server []
-  ;(.stop server))
 
-;(defn start-server []
-  ;(.start server))
+(defn -main [& [port]]
+  (let [port (Integer. (or port
+                           (System/getenv "PORT")
+                           8888))]
+    (app-server-start port)))
 
 (defn -main "running program"
-  [& args]
-  ;(run-repl)
-  ;(database/create-table)
-  ;(jetty/run-jetty #'app-with-reload {:port (Integer/valueOf (or (System/getenv "PORT") "3000"))}))
-  (jetty/run-jetty app {:port (Integer/valueOf (or (System/getenv "PORT") "3000"))}))
+  [& [port]]
+
+  (let [port (Integer. (or port
+                           (System/getenv "PORT")
+                           8888))]
+    (app-server-start port)))
 ;(jetty/run-jetty #'app-with-reload {:port 8080 :join? false}))
+(comment
+  (def app-server-instance (-main 8888))
+  (.stop app-server-instance))
