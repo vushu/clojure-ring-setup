@@ -6,10 +6,11 @@
 (defn main-layout [page req]
   (response
     (html5
-      [:head [:link {:rel "stylesheet" :href "https://cdnjs.cloudflare.com/ajax/libs/milligram/1.4.1/milligram.css" }]]
+      [:head [:link {:rel "stylesheet" :href "https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.3/css/bulma.min.css" }]]
       [:body
-       [:div {:class "container"}
-        (page req)]
+       [:section {:class "section"}
+        [:div {:class "container"}
+         (page req)]]
        ])))
 
 

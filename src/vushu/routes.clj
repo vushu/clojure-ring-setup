@@ -26,6 +26,7 @@
              [buddy.core.keys :as keys]
              [buddy.sign.util :as util]
              [buddy.core.nonce :as nonce]
+             [vushu.database :as db]
              [buddy.auth.middleware :refer [wrap-authentication
                                             wrap-authorization]]
              [buddy.hashers :as hasher]
@@ -80,22 +81,19 @@
 
 (defn password-matches-hashed [password hashed-password] (:valid (hasher/verify password hashed-password)))
 
-(defn login-handler [req]
-  (let [
-        claims {:user "DAN"
+(defn create-token [user]
+  (let [claims {:email (:users/email user) :password (:users/password user)
                 :exp  (exp)}
-        cookies (:cookies req)
-        password (-> req :parameters :form :password)
-        token (jwt/encrypt claims pubkey {:alg :rsa-oaep :enc :a128cbc-hs256})
-        up-request (assoc req :cookies token)]
+        token (jwt/encrypt claims pubkey {:alg :rsa-oaep :enc :a128cbc-hs256})]
+    token))
 
+(defn login-handler [req]
+  (if-some  [user (db/find-valid-user
+                    (get-in req [:parameters :form :email])
+                    (get-in req [:parameters :form :password]))]
 
-    (println "THE PASSWORD" password)
-
-    (if (password-matches-hashed password (hash-password "mama"))
-      (assoc-in (redirect "/") [:cookies :token] token)
-      (redirect "/login"))
-    ))
+    (assoc-in (redirect "/") [:cookies :token] (create-token user))
+    (redirect "/login")))
 
 (def paths
 
@@ -103,14 +101,12 @@
 
     ["" (partial main-layout (fn [req] [:h1 "Are you authenticated? " (authenticated? req) (:identity req)])) ]
     ["dashboard" (partial main-layout dashboard/index)]
-
     ["login" {:get login/index
               :post {
                      :coercion reitit.coercion.spec/coercion
-                     :parameters {:form {:username string? :password string?}}
+                     :parameters {:form {:email string? :password string?}}
                      :handler login-handler
                      }
-
               }]
     ["users"
      ["" (partial main-layout users/index)]
@@ -124,9 +120,7 @@
 (defn echo [request]
   {:status 200
    :body (:body-params request)})
-;(def backend (backends/session))
-;(def backend (session-backend))
-;(def backend (backends/session))
+
 (defn on-error
   [request value]
   {:status 403

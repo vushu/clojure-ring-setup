@@ -12,17 +12,16 @@
 
 
 (defn login-view "doc-string" [params]
-  [:div {:style "padding-top: 11.6rem"}
-   [:div {:class "row" :style "top:300px"}
-    [:div.column.column-50.column-offset-25
+  [:div {:class "pt-5"}
+   [:div {:class "columns is-centered"}
+    [:div {:class "column is-four-fifths"}
      (form/form-to [:post "/login"]
-                   (when-not (blank? (:username params))
+                   (when-not (blank? (:email params))
                      (form/label "lbl" "No such user exists! try again"))
-                   (form/text-field "username"  (:username params))
-                   (form/password-field "password" (:password params))
-                   (form/submit-button {:class "column column-33 column-offset-33 button"} "Sign-in"))
-     ;(println "user -> " (:username params))
-     ]]])
+                   (form/text-field {:class "input" :placeholder "Email" :type "email"} "email" (:email params))
+                   (form/password-field {:class "input mt-3" :placeholder "Password"} "password" (:password params))
+                   [:div {:class "buttons is-centered"}
+                    (form/submit-button {:class "button mt-3 has-text-centered"} "Sign-in")])]]])
 
 (defn index [req]
   (main-layout
@@ -50,9 +49,9 @@
    :body {:message "Please fill formular"}}
   )
 
-(defn show-login-view [username password]
+(defn show-login-view [email password]
   (println "re-render login")
-  (main-layout login-view {:username username :password password}))
+  (main-layout login-view {:email email :password password}))
 
 (defn set-user [session username password]
   (assoc (redirect "/users")
@@ -60,14 +59,14 @@
 
 (def post {
            :coercion reitit.coercion.spec/coercion
-           :parameters {:form {:username string? :password string?}}
+           :parameters {:form {:email string? :password string?}}
            :session {:identity string?}
            :responses {
                        ;200 { :body {:message string?}}
                        ;400 {:body {:message string?}}
                        }
            :handler (fn [req]
-                      (let [username (-> req :parameters :form :username)
+                      (let [username (-> req :parameters :form :email)
                             password (-> req :parameters :form :password)
                             session (-> req :session)]
 

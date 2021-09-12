@@ -21,6 +21,7 @@
             [buddy.auth.backends.session :refer [session-backend]]
             [reitit.ring.coercion :as rcc]
             [reitit.ring.middleware.muuntaja :as muuntaja]
+            [vushu.database :as database]
             )
   (:gen-class))
 
@@ -76,7 +77,7 @@
 
 (def app
   (-> (ring/ring-handler routes/router ring/default-options-handler {:middleware [wrap-session]})
-  ;(-> (ring/ring-handler routes/router ring/default-options-handler )
+      ;(-> (ring/ring-handler routes/router ring/default-options-handler )
       ;wrap-params
       ;(wrap-authorization routes/backend)
       ;(wrap-authentication routes/backend)
@@ -86,12 +87,19 @@
 (def app-with-reload
   (wrap-reload #'app))
 
-(defn start-server "Starting the server" []
-  jetty/run-jetty)
+(defonce server
+  (jetty/run-jetty #'app-with-reload {:port (Integer/valueOf (or (System/getenv "PORT") "3000")) :join? false}))
 
+(defn stop-server []
+  (.stop server))
+
+(defn start-server []
+  (.start server))
 
 (defn -main "running program"
   [& args]
   ;(run-repl)
-  (jetty/run-jetty app {:port (Integer/valueOf (or (System/getenv "PORT") "3000"))}))
-  ;(jetty/run-jetty #'app-with-reload {:port 8080 :join? false}))
+  ;(database/create-table)
+  ;(jetty/run-jetty #'app-with-reload {:port (Integer/valueOf (or (System/getenv "PORT") "3000"))}))
+;(jetty/run-jetty app {:port (Integer/valueOf (or (System/getenv "PORT") "3000"))}))
+;(jetty/run-jetty #'app-with-reload {:port 8080 :join? false}))
