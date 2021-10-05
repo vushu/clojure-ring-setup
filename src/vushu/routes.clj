@@ -12,7 +12,7 @@
              [ring.middleware.stacktrace :refer [wrap-stacktrace]]
              [muuntaja.core :as m]
              [reitit.ring.middleware.muuntaja :as muuntaja]
-             [ring.util.response :refer [response redirect update-header header]]
+             [ring.util.response :refer [response redirect update-header header set-cookie]]
              [buddy.auth :refer [authenticated? throw-unauthorized]]
              [reitit.ring.coercion :as rcc]
              [reitit.coercion.spec]
@@ -82,8 +82,11 @@
 (defn password-matches-hashed [password hashed-password] (:valid (hasher/verify password hashed-password)))
 
 (defn create-token [user]
-  (let [claims {:email (:users/email user) :password (:users/password user)
+  (let [claims {:email (:users/email user)
+                :password (:users/password user)
+                :role (:users/role user)
                 :exp  (exp)}
+
         token (jwt/encrypt claims pubkey {:alg :rsa-oaep :enc :a128cbc-hs256})]
     token))
 
@@ -92,14 +95,15 @@
                     (get-in req [:parameters :form :email])
                     (get-in req [:parameters :form :password]))]
 
-    (assoc-in (redirect "/") [:cookies :token] (create-token user))
-    (redirect "/login")))
+    (set-cookie (redirect "/") "token" (create-token user) {:http-only true :same-site :lax})
+    ))
 
 (def paths
 
   [["/"
 
-    ["" (partial main-layout (fn [req] [:h1 "Are you authenticated? " (authenticated? req) (:identity req)])) ]
+    ["" (fn [req] (main-layout dashboard/index  req :style "dashboard.css")) ]
+    ;["" (partial main-layout (fn [req] [:h1 "Are you authenticated? " (authenticated? req) " Role: " (get-in req [:identity :role])])) ]
     ["dashboard" (partial main-layout dashboard/index)]
     ["login" {:get login/index
               :post {
@@ -108,6 +112,8 @@
                      :handler login-handler
                      }
               }]
+    ["sign-out" (fn [req]
+                  (set-cookie (redirect "/login") "token" "" {:max-age 0}))]
     ["users"
      ["" (partial main-layout users/index)]
      ["/list" (partial main-layout users/hej)]]
@@ -130,17 +136,25 @@
 
 (defn any-access [_] true)
 
+(defn is-admin [req]
+  (= (get-in req [:identity :role]) "admin"))
+
 (def rules [
             {:pattern #"^/login$"
              :handler any-access}
 
             ;{:pattern #"^/dashboard"
             ;:handler (fn [req] (do (prn (:cookies req)) (some? (:cookies req))))}
+            {:pattern #"^/users"
+             :handler (fn [req] (is-admin req))
+             }
 
             {:pattern #"^/.*"
-             :handler (fn [req]  (authenticated? req))
+             :handler (fn [req]
+                        (println "is admin?" (is-admin req))
+                        (and (authenticated? req) (is-admin req)))
              :on-error (fn [req _]
-                         (dissoc :cookies)
+                         ;(dissoc :cookies)
                          (redirect "login"))}])
 
 (defn get-token [request]
@@ -148,6 +162,7 @@
 
 (defn cookie-token-to-header [handler] (fn [request]
                                          ;(println "==========================\r\n" (get-token request))
+                                         ;(if-some [token (get-token request)])
                                          (let [req (header request "Authorization" (str "Token " (get-token request) ))]
                                            (handler req))))
 
@@ -176,3 +191,4 @@
 
 (def router
   (ring/router paths options))
+

@@ -3,6 +3,7 @@
             [ring.middleware.reload :refer [wrap-reload]]
             [ring.middleware.session :refer [wrap-session]]
             [ring.middleware.cookies :refer [wrap-cookies]]
+            [ring.middleware.resource :refer [wrap-resource]]
             [ring.middleware.params :refer [wrap-params]]
             [vushu.repl :refer [run-repl]]
             [reitit.ring.coercion :as coersion]
@@ -32,7 +33,7 @@
 (def rules [{:pattern #"^/login$"
              :handler any-access}
             {:pattern #"^/.*"
-             :handler (fn [req] (do (println "HANDLING SESSIon" (:identity req)) (authenticated? req)))
+             :handler (fn [req] (do (println "Handling Session" (:identity req)) (authenticated? req)))
              :on-error (fn [req _]
                          (when-not ( authenticated? req)
                            (redirect "login")))}])
@@ -76,7 +77,9 @@
 
 
 (def app
-  (-> (ring/ring-handler routes/router ring/default-options-handler {:middleware [wrap-session]})
+  ;(-> (ring/ring-handler routes/router ring/default-options-handler {:middleware [wrap-session]})
+  (-> (ring/ring-handler routes/router ring/default-options-handler)
+      (wrap-resource "public")
       ;(-> (ring/ring-handler routes/router ring/default-options-handler )
       ;wrap-params
       ;(wrap-authorization routes/backend)
@@ -98,14 +101,9 @@
                            8888))]
     (app-server-start port)))
 
-(defn -main "running program"
-  [& [port]]
-  (database/create-all-table)
-  (let [port (Integer. (or port
-                           (System/getenv "PORT")
-                           8888))]
-    (app-server-start port)))
-;(jetty/run-jetty #'app-with-reload {:port 8080 :join? false}))
 (comment
   (def app-server-instance (-main 8888))
   (.stop app-server-instance))
+
+;(app {:request-method :get :uri "/sign-out"})
+

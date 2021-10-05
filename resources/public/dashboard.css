@@ -1,0 +1,30 @@
+@import url("utils.css");
+
+body {
+    background-color: var(--grey);
+}
+
+.nav-bar{
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 0.5rem;
+
+}
+.nav-bar > li {
+    float: left;
+}
+
+
+@media all and (min-width: 600px){
+    .nav-bar{
+        grid-template-columns: min-content min-content;
+        grid-template-rows: 1fr;
+        gap: 1rem;
+
+    }
+
+}

@@ -1,0 +1,177 @@
+:root {
+    --grey: #778899;
+    --purple: #FABBFF;
+    --red: #F23C3A;
+    --green: #34A56F;
+    --blue: #6699CC;
+    --yellow: #F9FAAA;
+    --font: 'Courier New', monospace;
+    --font: 'Verdana', sans-serif;
+}
+
+.text-center {
+    text-align: center;
+}
+.flex{
+    display: flex;
+}
+.flex-center {
+    justify-content: center !important;
+}
+.flex-end {
+    justify-content: flex-end !important;
+}
+
+.flex-start {
+    justify-content: flex-start !important;
+}
+
+.flex-between {
+    justify-content: space-between !important;
+}
+
+
+.flex-center-both {
+    justify-content: center;
+    align-items: center;
+}
+
+.flex-row {
+    flex-direction: row;
+}
+
+.flex-column {
+    flex-direction: column;
+}
+
+
+.border {
+    border: 0.5rem solid black;
+}
+
+.color-purple {
+    color: var(--purple) !important;
+}
+
+.color-green{
+    color: var(--green) !important;
+}
+
+.color-red{
+    color: var(--red) !important;
+}
+
+.color-blue{
+    color: var(--blue) !important;
+}
+
+.color-black{
+    color: black !important;
+}
+
+.color-white{
+    color: white !important;
+}
+
+.color-purple {
+    color: var(--purple) !important;
+}
+
+.bg-purple{
+    background-color: var(--purple) !important;
+}
+.bg-green{
+    background-color: var(--green) !important;
+}
+
+.bg-red{
+    background-color: var(--red) !important;
+}
+
+.bg-blue{
+    background-color: var(--blue) !important;
+}
+
+.vvh95 {
+    height: 95vh;
+}
+
+.vh90 {
+    height: 90vh;
+}
+
+
+
+.button{
+    font-family: var(--font);
+    border: 1px solid black;
+    /*box-sizing: border-box;*/
+    width: 100%;
+    align-items: center;
+    background-color: var(--grey);
+    color:white;
+    text-align: center;
+    /*max-width: 40rem;*/
+    /*resize: vertical;*/
+    padding: 0.2rem 1.4rem;
+    font-size: clamp(1rem, 1.2rem, 3rem);
+    text-decoration: none;
+    cursor: pointer;
+    display: inline-block;
+}
+
+
+@media all and (min-width: 600px) {
+    .button {
+        width: clamp(4rem, 10rem, 40rem);
+        height: unset;
+        line-height: unset;
+    }
+}
+
+.text-field{
+    font-family: var(--font);
+    min-width: 5rem;
+    width: 100%;
+    max-width: 40rem;
+    padding: 12px 20px;
+    margin: 2px 0;
+    box-sizing: border-box;
+    background-color: var(--purple);
+}
+
+.col-25 {
+    width: 25%;
+    float: left;
+}
+.col-75 {
+    width: 75%;
+    float: left;
+}
+
+.col-100 {
+    width: 100%;
+    float: left;
+}
+
+.mb-3 {
+    margin-bottom: 3px;
+}
+.mt-3 {
+    margin-top: 3px;
+}
+
+.w-25 {
+    width: 25%;
+}
+.w-50 {
+    width: 50%;
+}
+
+.w-75 {
+    width: 75%;
+}
+
+.w-100 {
+    width: 100%;
+}

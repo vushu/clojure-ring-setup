@@ -1,0 +1,35 @@
+@import url("utils.css");
+
+.sign-in-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr 2fr;
+    height: 100vh;
+    grid-template-areas:
+    "topbar"
+    "middle"
+    "bot-bar";
+}
+body {
+    overflow: hidden;
+    background: var(--blue);
+}
+
+.top-bar{
+    font-size: clamp(4rem, 1rem + 10vh, 7rem);
+    text-align: center;
+    justify-content: center;
+    font-family: var(--font);
+}
+
+.middle {
+    /*display: flex;*/
+    justify-content: center;
+    flex-direction: column;
+}
+
+.bot-bar{
+    width: 100%;
+    padding: 0;
+    margin: 0;
+}

@@ -12,20 +12,48 @@
 
 
 (defn login-view "doc-string" [params]
-  [:div {:class "pt-5"}
-   [:div {:class "columns is-centered"}
-    [:div {:class "column is-four-fifths"}
-     (form/form-to [:post "/login"]
-                   (when-not (blank? (:email params))
-                     (form/label "lbl" "No such user exists! try again"))
-                   (form/text-field {:class "input" :placeholder "Email" :type "email"} "email" (:email params))
-                   (form/password-field {:class "input mt-3" :placeholder "Password"} "password" (:password params))
-                   [:div {:class "buttons is-centered"}
-                    (form/submit-button {:class "button mt-3 has-text-centered"} "Sign-in")])]]])
+  [:div {:class "sign-in-grid"}
+   [:div {:class "top-bar flex flex-center-both"} "Vu Portal"]
+   [:div {:class "middle" }
+    ;[:div {:class "header bg-danger" :style "height: 10em"} "sdfdsa"]
+    (form/form-to [:post "/login"]
+                  (when-not (blank? (:email params))
+                    (form/label "" "No such user exists! try again"))
+                  [:div {:class "flex flex-center"}
+                   (form/text-field {:class "text-field bg-green" :placeholder "Email" :type "email"} "email" (:email params))]
+                  [:div {:class "flex flex-center"}
+                   (form/password-field {:class "text-field bg-green" :placeholder "Password"} "password" (:password params))]
+                  [:div {:class "flex flex-center"}
+                   (form/submit-button {:class "button bg-green mt-3 "} "Log in")])]
+   [:div {:class "bot-bar" } ""]]
+  ;[:div {:class "footer bg-danger" :style "height: 10em"} "hsss"]
+  )
+
+
+;(defn login-view "doc-string" [params]
+;[:div {:class "vf vf-col vf-center"};
+;[:div {:class "top-bar"}
+;"Vushu"]
+;[:div {:class "middle" }
+;;[:div {:class "header bg-danger" :style "height: 10em"} "sdfdsa"]
+;(form/form-to [:post "/login"]
+;[:fieldset
+;(when-not (blank? (:email params))
+;(form/label "" "No such user exists! try again"))
+;[:div {:class "vf vf-center vf-col"}
+;(form/text-field {:class "mb-3" :placeholder "Email" :type "email"} "email" (:email params))
+;(form/password-field {:class "mb-3" :placeholder "Password"} "password" (:password params))]
+;[:div {:class "vf vf-center"}
+;(form/submit-button {:class "w-50"} "Sign-in")]])]
+
+;[:div {:class "bot-bar" }]]
+;;[:div {:class "footer bg-danger" :style "height: 10em"} "hsss"]
+;)
+
 
 (defn index [req]
   (main-layout
-    login-view req))
+    login-view req :style "sign-in.css"))
 
 (defn handler-test [{:keys [parameters]}]
   (let [username (-> parameters :form :username)]
@@ -69,7 +97,6 @@
                       (let [username (-> req :parameters :form :email)
                             password (-> req :parameters :form :password)
                             session (-> req :session)]
-
 
                         (println "POST ::: session" (:session req))
                         (println "usersname:" username)

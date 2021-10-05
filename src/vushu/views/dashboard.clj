@@ -1,12 +1,21 @@
 (ns vushu.views.dashboard
   (:require [hiccup.element :refer [link-to]]
-            [ring.util.response :refer [get-header]]))
+            [ring.util.response :refer [get-header]]
+            [hiccup.element :refer [link-to]]
+            ))
+
 
 (defn index [req]
-  [:div {:class "row" :style "height: 1000px"}
-   [:div {:class "column column-50"}
-    [:h1 "hello dashboard"]
-    [:h1 "anything" (get-header req "location")]
-    [:pre {:style "height: 100%"}
-     [:code {:style "word-wrap: break-word"} (:cookies req)]]]]
+  [:div {:class ""}
+   [:nav
+    [:ul {:class "nav-bar"}
+     [:li {:class "flex"}
+      (link-to {:class "button bg-red"} "sign-out" "Sign out")
+      ;[:pre {:style "height: 100%"}
+      ;[:code {:style ""} (:cookies req)]]]]
+      ]
+     [:li {:class "flex"}
+      (link-to {:class "button bg-green"} "/" "Create&nbspuser")
+      ]]]
+   ]
   )
