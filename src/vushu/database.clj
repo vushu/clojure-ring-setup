@@ -131,6 +131,9 @@
 
 
 
+(defn create-user [email password role]
+  (-> (add-user email password role)
+      execute))
 
 
 

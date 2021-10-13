@@ -15,6 +15,18 @@
 .flex{
     display: flex;
 }
+
+.flex-inline {
+    display: flex-inline;
+}
+
+.flex-wrap {
+    flex-wrap: wrap;
+}
+
+.flex-gap-1{
+   gap: 1rem;
+}
 .flex-center {
     justify-content: center !important;
 }
@@ -137,7 +149,6 @@
     padding: 12px 20px;
     margin: 2px 0;
     box-sizing: border-box;
-    background-color: var(--purple);
 }
 
 .col-25 {

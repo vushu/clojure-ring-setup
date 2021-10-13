@@ -98,11 +98,15 @@
     (set-cookie (redirect "/") "token" (create-token user) {:http-only true :same-site :lax})
     ))
 
+(defn user-create-handler [{ { {:keys [email password]} :form} :parameters}]
+  (db/create-user email password "user")
+  (redirect "/")
+  )
 (def paths
 
   [["/"
 
-    ["" (fn [req] (main-layout dashboard/index  req :style "dashboard.css")) ]
+    ["" (fn [req] (main-layout dashboard/index  req :style "/dashboard.css")) ]
     ;["" (partial main-layout (fn [req] [:h1 "Are you authenticated? " (authenticated? req) " Role: " (get-in req [:identity :role])])) ]
     ["dashboard" (partial main-layout dashboard/index)]
     ["login" {:get login/index
@@ -116,6 +120,14 @@
                   (set-cookie (redirect "/login") "token" "" {:max-age 0}))]
     ["users"
      ["" (partial main-layout users/index)]
+     ["/new" (fn [req] ( main-layout users/new-user req :style "/users.css"))]
+     ["/create" {:post {
+                        :coercion reitit.coercion.spec/coercion
+                        :parameters {:form {:email string? :password string?}}
+                        :handler user-create-handler
+                        }
+
+                 }]
      ["/list" (partial main-layout users/hej)]]
 
     ["api"
@@ -152,7 +164,8 @@
             {:pattern #"^/.*"
              :handler (fn [req]
                         (println "is admin?" (is-admin req))
-                        (and (authenticated? req) (is-admin req)))
+                        ;(and (authenticated? req) (is-admin req)))
+                        (authenticated? req))
              :on-error (fn [req _]
                          ;(dissoc :cookies)
                          (redirect "login"))}])

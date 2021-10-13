@@ -20,9 +20,9 @@
                   (when-not (blank? (:email params))
                     (form/label "" "No such user exists! try again"))
                   [:div {:class "flex flex-center"}
-                   (form/text-field {:class "text-field bg-green" :placeholder "Email" :type "email"} "email" (:email params))]
+                   (form/email-field {:class "text-field" :placeholder "Email" :type "email"} "email" (:email params))]
                   [:div {:class "flex flex-center"}
-                   (form/password-field {:class "text-field bg-green" :placeholder "Password"} "password" (:password params))]
+                   (form/password-field {:class "text-field" :placeholder "Password"} "password" (:password params))]
                   [:div {:class "flex flex-center"}
                    (form/submit-button {:class "button bg-green mt-3 "} "Log in")])]
    [:div {:class "bot-bar" } ""]]

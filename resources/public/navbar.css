@@ -1,0 +1,28 @@
+.nav-bar{
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr min-content min-content;
+    gap: 0.5rem;
+
+}
+.grid-end {
+    justify-items: end;
+}
+
+.grid-start {
+    justify-items: start;
+}
+
+@media all and (min-width: 600px){
+    .nav-bar{
+        grid-template-columns: min-content 1fr min-content;
+        grid-template-rows: 1fr;
+        gap: 0.5rem;
+
+    }
+
+}
+

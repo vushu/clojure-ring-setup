@@ -1,4 +1,5 @@
 @import url("utils.css");
+@import url("navbar.css");
 
 body {
     background-color: var(--grey);

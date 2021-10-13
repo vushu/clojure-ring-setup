@@ -4,12 +4,12 @@
 
 
 (defn main-layout
-  [page req & {:keys [style] :or {style "app.css"}}]
+  [page req & {:keys [style] :or {style "/app.css"}}]
   (response
     (html5
       [:head
        [:link {:rel "stylesheet" :href style}]
-       [:link {:rel "stylesheet" :href "utils.css"}]
+       [:link {:rel "stylesheet" :href "/utils.css"}]
        ;[:link {:rel "stylesheet" :href "https://unpkg.com/awsm.css/dist/awsm_theme_big-stone.min.css"}]
        ;[:link {:rel "stylesheet" :href "https://unpkg.com/awsm.css/dist/awsm_theme_black.min.css"}]
        ;ss
