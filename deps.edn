@@ -32,12 +32,15 @@
                 {:git/url "https://github.com/cognitect-labs/test-runner"
                  :sha "2d69f33d7980c3353b246c28f72ffeafbd9f2fab"}}
    :exec-fn cognitect.test-runner.api/test}
-  :uberjar {:extra-deps {com.github.seancorfield/depstar {:mvn/version "2.0.216"}}}
-            ;:exec-fn hf.depstar/uberjar
-            ;:exec-args {:aot true
-                        ;:jar "myapp.jar"
-                        ;:main-class "vushu.myapp"
-                        ;:sync-pom true}}
+  :depstar {:replace-deps {com.github.seancorfield/depstar {:mvn/version "2.0.216"}}
+            :ns-default hf.depstar
+            :exec-args {}}
+  :uberjar {:replace-deps {com.github.seancorfield/depstar {:mvn/version "2.0.216"}}}
+  ;:exec-fn hf.depstar/uberjar
+  ;:exec-args {:aot true
+  ;:jar "myapp.jar"
+  ;:main-class "vushu.myapp"
+  ;:sync-pom true}}
   :cider-clj {:extra-deps {cider/cider-nrepl {:mvn/version "0.22.4"}}
               :main-opts ["-m" "nrepl.cmdline" "--middleware" "[cider.nrepl/cider-middleware]"]}
 

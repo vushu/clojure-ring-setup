@@ -30,6 +30,81 @@
       <artifactId>clojure</artifactId>
       <version>1.10.3</version>
     </dependency>
+    <dependency>
+      <groupId>metosin</groupId>
+      <artifactId>muuntaja</artifactId>
+      <version>0.6.8</version>
+    </dependency>
+    <dependency>
+      <groupId>com.bhauman</groupId>
+      <artifactId>rebel-readline</artifactId>
+      <version>0.1.4</version>
+    </dependency>
+    <dependency>
+      <groupId>org.postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+      <version>42.2.22</version>
+    </dependency>
+    <dependency>
+      <groupId>com.github.seancorfield</groupId>
+      <artifactId>honeysql</artifactId>
+      <version>2.0.783</version>
+    </dependency>
+    <dependency>
+      <groupId>buddy</groupId>
+      <artifactId>buddy-hashers</artifactId>
+      <version>1.8.1</version>
+    </dependency>
+    <dependency>
+      <groupId>hiccup</groupId>
+      <artifactId>hiccup</artifactId>
+      <version>1.0.5</version>
+    </dependency>
+    <dependency>
+      <groupId>cljc.java-time</groupId>
+      <artifactId>cljc.java-time</artifactId>
+      <version>0.1.16</version>
+    </dependency>
+    <dependency>
+      <groupId>com.github.seancorfield</groupId>
+      <artifactId>next.jdbc</artifactId>
+      <version>1.2.689</version>
+    </dependency>
+    <dependency>
+      <groupId>cider</groupId>
+      <artifactId>nrepl</artifactId>
+      <version>0.3.0</version>
+    </dependency>
+    <dependency>
+      <groupId>cider</groupId>
+      <artifactId>cider-nrepl</artifactId>
+      <version>0.26.0</version>
+    </dependency>
+    <dependency>
+      <groupId>nrepl</groupId>
+      <artifactId>nrepl</artifactId>
+      <version>0.8.3</version>
+    </dependency>
+    <dependency>
+      <groupId>buddy</groupId>
+      <artifactId>buddy-auth</artifactId>
+      <version>3.0.1</version>
+    </dependency>
+    <dependency>
+      <groupId>heroku-database-url-to-jdbc</groupId>
+      <artifactId>heroku-database-url-to-jdbc</artifactId>
+      <version>0.2.2</version>
+    </dependency>
+    <dependency>
+      <groupId>metosin</groupId>
+      <artifactId>reitit</artifactId>
+      <version>0.5.13</version>
+    </dependency>
+    <dependency>
+      <groupId>ring</groupId>
+      <artifactId>ring</artifactId>
+      <version>1.9.3</version>
+    </dependency>
   </dependencies>
   <build>
     <sourceDirectory>src</sourceDirectory>
@@ -38,10 +113,6 @@
     <repository>
       <id>clojars</id>
       <url>https://repo.clojars.org/</url>
-    </repository>
-    <repository>
-      <id>sonatype</id>
-      <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
     </repository>
   </repositories>
   <distributionManagement>
