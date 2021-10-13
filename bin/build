@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-clojure -X:depstar -m hf.depstar.uberjar myapp.jar
+clojure -M:depstar -m hf.depstar.uberjar myapp.jar
